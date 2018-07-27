@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="row">
+    <!-- Table of Servers -->
+      <div class="col-sm-9">
+        <div class="card">
+            <div class="card-header card-title">Server Tracker <button type="button" (click)="newServer(); serverForm.reset(); submitted=!submitted;" class="btn btn-sm btn-primary add-server">Add Server</button></div>
+            <div class="card-body row">
+              <div class="col-sm-9">
+                <table class="table table-bordered" >
+                  <thead>
+                    <tr>
+                      <th>Hostname</th>
+                      <th>IP</th>
+                      <th>Deadline</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let server of servers">
+                      <td><span placement="bottom" ngbPopover="{{ server.description }}" triggers="mouseenter:mouseleave">{{ server.hostname }}</span></td>
+                      <td>{{ server.ip }}</td>
+                      <td>{{ server.deadline | date:'shortDate'  }}</td>
+                      <td>{{ server.setup ? 'Completed' : 'Pending' }}</td>
+                      <td>
+                        <a href="#" (click)="removeServer(server.id)" placement="bottom" ngbPopover="Remove" triggers="mouseenter:mouseleave" class="inline-spacer">
+                          <fa-icon icon="times" class="remove-icon"></fa-icon> 
+                        </a>
+                        <a *ngIf="!server.setup" href="#" (click)="setupServer(server.id)" placement="bottom" ngbPopover="Complete" triggers="mouseenter:mouseleave" class="complete-link">
+                          <fa-icon icon="check" class="complete-icon"></fa-icon>  
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Overdue Server List -->
+              <div class="boxed col-sm-3">
+                  <span id="overdue-header">Overdue Servers</span>
+                  <div *ngFor="let server of servers">
+                    <ul *ngIf="dateFilter(server.deadline)" id="overdue-list">
+                      <li>{{ server.hostname }}</li>
+                      <li>{{ server.ip }}</li>
+                      <li>{{ getDays(server.deadline) }}</li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- Add Server Form -->
+      <div class="col-sm-3">
+        <div class="card" [hidden]="submitted">
+            <div class="card-header card-title">Add Server</div>
+              <div class="card-body">
+              <form (ngSubmit)="onSubmit()" #serverForm="ngForm">
+                <div class="form-group">
+                  <label for="Hostname">Hostname</label>
+                  <input type="text" class="form-control" id="hostname" [(ngModel)]="model.hostname" name="hostname" required #hostname="ngModel" pattern="^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$" maxlength="32">
+                  <div [hidden]="hostname.valid || hostname.pristine" class="alert alert-danger">
+                  A valid hostname is required
+                  </div>
+                </div> 
+                <div class="form-group">
+                  <label for="ip">IP</label>
+                  <input type="text" class="form-control" id="ip" [(ngModel)]="model.ip" name="ip" required #ip="ngModel" pattern="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$">
+                  <div [hidden]="ip.valid || ip.pristine" class="alert alert-danger">
+                  An valid IP is required
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="deadline">Deadline</label>
+                  <input type="text" class="form-control" id="deadline" [ngModel]="model.deadline" 
+                  (ngModelChange)="model.deadline=$event"  name="deadline" ngbDatepicker #d="ngbDatepicker" #deadline="ngModel" (focus)="d.toggle()">
+                  <div [hidden]="deadline.valid || deadline.pristine" class="alert alert-danger"> 
+                  A deadline is required
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea rows="3" cols="30" class="form-control" id="description" [(ngModel)]="model.description" name="description" required #description="ngModel">
+                  </textarea>
+                  <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
+                  A description is required
+                  </div>
+                </div>      
+                <button type="submit" class="btn btn-success" [disabled]="!serverForm.form.valid">Submit</button> 
+                <button type="button" (click)="serverForm.reset(); submitted=!submitted;" class="btn btn-primary btn-sm" class="add-server">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+  </div>
