@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Server }    from '../server';
+import { ServerService } from '../server.service';
 
 @Component({
   selector: 'server-form',
@@ -7,6 +8,8 @@ import { Server }    from '../server';
   styleUrls: ['./server-form.component.css']
 })
 export class ServerFormComponent implements OnInit {
+
+  constructor(private ServerService: ServerService) { }
 
     id: number;
   	hostname: string;
@@ -16,23 +19,19 @@ export class ServerFormComponent implements OnInit {
   	setup: boolean;
     submitted: boolean;
     currentDate: any;
+    servers = [];
 
   ngOnInit() {
     this.submitted = true;
     this.currentDate = new Date();
     this.currentDate.setHours(0,0,0,0);
     this.currentDate = this.currentDate.toISOString();
+    this.getServers();
   }
 
   // starter record
   model = new Server(0, '', '', '', '', false);
-
-  // some dummy data 
-  servers = [
-    new Server(101, 'core', 'The central devices we rely on and scan regularly', '151.101.65.164', '2018-03-23T18:30:00.000Z', true),
-    new Server(102, 'backup', 'Lorem ipsum backup.', '104.126.20.140', '2018-09-23T18:30:00.000Z', false),
-    new Server(103, 'external', 'Lorem ipsum external.', '151.101.1.67', '2017-12-23T18:30:00.000Z', true),
-  ];
+  
 
   onSubmit() { 
     this.submitted = true; 
@@ -52,6 +51,10 @@ export class ServerFormComponent implements OnInit {
 
   }
 
+  getServers(): void {
+    this.servers = this.ServerService.getServers();
+  }
+  
   // remove server from working list
   removeServer(id){
     if(id){
