@@ -11,12 +11,6 @@ export class ServerFormComponent implements OnInit {
 
   constructor(private ServerService: ServerService) { }
 
-    id: number;
-  	hostname: string;
-  	description: string;
-  	ip: string;
-  	deadline: any;
-  	setup: boolean;
     submitted: boolean;
     currentDate: any;
     servers = [];
@@ -30,22 +24,25 @@ export class ServerFormComponent implements OnInit {
   }
 
   // starter record
-  model = new Server(0, '', '', '', '', false);
+  model = new Server();
   
 
   onSubmit() { 
     this.submitted = true; 
-    // Naive unique ID
-    this.id = this.servers[this.servers.length-1].id + 1;
-    this.hostname = this.model.hostname;
-    this.ip = this.model.ip;
-    this.description = this.model.description;
+    let deadline;
+
     if(this.model.deadline !== null && typeof this.model.deadline === 'object' && this.model.deadline.hasOwnProperty('year')) {
-      this.deadline = new Date(this.model.deadline.month + '/' + this.model.deadline.day + '/' + this.model.deadline.year).toISOString();
+       deadline = new Date(this.model.deadline.month + '/' + this.model.deadline.day + '/' + this.model.deadline.year).toISOString();
     }
-    this.setup = false;
     // define a new server object
-    const newServer = new Server(this.id, this.hostname, this.description, this.ip, this.deadline, this.setup);
+    const newServer = new Server();
+    newServer.id =  this.servers[this.servers.length-1].id + 1;
+    newServer.hostname = this.model.hostname;
+    newServer.ip = this.model.ip;
+    newServer.description = this.model.description;
+    newServer.deadline = deadline;
+    newServer.setup = false;
+
     // add to server array
     this.servers.push(newServer);
 
@@ -79,10 +76,10 @@ export class ServerFormComponent implements OnInit {
   }
 
   newServer() {
-    this.model = new Server(0, '', '', '', '', false);
+    this.model = new Server();
   }
 
-  // check if task is overdue
+  // check if server is overdue
   dateFilter(deadline) {
     const parsedDate = new Date(deadline);
     const todaysDate = new Date(this.currentDate);
