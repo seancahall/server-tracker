@@ -53,21 +53,21 @@ export class ServerFormComponent implements OnInit {
   }
   
   // remove server from working list
-  removeServer(id){
+  removeServer(id: number): void {
     if(id){
       this.servers = this.servers.filter( s => s.id !== id);
     }
   }
 
   // mark server record as complete
-  setupServer(id){
+  setupServer(id: number): void {
     if(id){
       this.servers.filter(s => s.id === id)[0].setup = true;
     }
   }
 
   // calculate the number of days past due
-  getDays(deadline) {
+  getDays(deadline: string): string {
     const parsedDate = new Date(deadline);
     const todaysDate = new Date(this.currentDate);
     const timeDiff = Math.abs(todaysDate.getTime() - parsedDate.getTime());
@@ -80,7 +80,7 @@ export class ServerFormComponent implements OnInit {
   }
 
   // check if server is overdue
-  dateFilter(deadline) {
+  dateFilter(deadline: string): boolean {
     const parsedDate = new Date(deadline);
     const todaysDate = new Date(this.currentDate);
     return todaysDate > parsedDate;
