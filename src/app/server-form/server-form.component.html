@@ -71,7 +71,7 @@
                 <div class="form-group">
                   <label for="deadline">Deadline</label>
                   <input type="text" class="form-control" id="deadline" [ngModel]="model.deadline" 
-                  (ngModelChange)="model.deadline=$event"  name="deadline" ngbDatepicker #d="ngbDatepicker" #deadline="ngModel" (focus)="d.toggle()">
+                  (ngModelChange)="model.deadline=$event" name="deadline" ngbDatepicker #d="ngbDatepicker" #deadline="ngModel" (focus)="d.toggle()">
                   <div [hidden]="deadline.valid || deadline.pristine" class="alert alert-danger"> 
                   A deadline is required
                   </div>
