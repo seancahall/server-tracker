@@ -43,8 +43,11 @@ export class ServerFormComponent implements OnInit {
     newServer.setup = false;
 
     // add to server array
-    this.servers.push(newServer);
+   // this.servers.push(newServer);
 
+    this.serverService
+      .addServer(newServer)
+      .subscribe(server=> this.servers.push(server));
   }
 
   getServers(): void {
@@ -53,10 +56,13 @@ export class ServerFormComponent implements OnInit {
         .subscribe(servers => this.servers = servers);
   }
   
-  // remove server from working list
+  // remove server
   removeServer(id: number): void {
     if(id){
-      this.servers = this.servers.filter( s => s.id !== id);
+      this.serverService
+        .deleteServer(id)
+        .subscribe();
+        this.getServers();
     }
   }
 

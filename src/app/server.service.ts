@@ -1,28 +1,50 @@
 import { Injectable } from '@angular/core';
 import { Server } from './server';
-import { Headers } from '@angular/http';
+import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
-import {Observable} from 'rxjs'; 
+import { Observable } from 'rxjs'; 
+import { catchError } from 'rxjs/operators';
+import { HttpErrorHandler, HandleError } from './http-error-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerService {
 
-  private headers = new Headers({ 'Content-Type': 'application/json' });
-  private serversUrl = 'api/servers';  // URL to web api
+  private httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+  };
 
-  constructor(private httpc: HttpClient) {
+  private serversUrl = 'api/servers';  // URL to web api
+  private handleError: HandleError;
+
+  constructor(private httpc: HttpClient,
+    httpErrorHandler: HttpErrorHandler) {
+    this.handleError = httpErrorHandler.createHandleError('ServerService');
   }
 
   // mock api call to return data to build server table
   getServers():Observable<any>{
     return this.httpc.get<any>(this.serversUrl); 
   }
-  
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+
+  /** POST: add a new server to the in-memopry database */
+  addServer (server: Server): Observable<Server> {
+    return this.httpc.post<Server>(this.serversUrl, server, this.httpOptions)
+      .pipe(
+        catchError(this.handleError('addServer', server))
+      );
+  }
+
+  /** DELETE: delete the server from the in-memory database */
+  deleteServer (id: number): Observable<{}> {
+    const url = `${this.serversUrl}/${id}`;
+    return this.httpc.delete(url, this.httpOptions)
+      .pipe(
+        catchError(this.handleError('deleteServer'))
+      );
   }
 
 }

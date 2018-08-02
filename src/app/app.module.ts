@@ -11,6 +11,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryServerService } from '../app/in-memory-server-service';
+import { HttpErrorHandler } from './http-error-handler.service';
+import { MessageService } from './message.service';
 
 // Add an icon to the library for convenient access in other components
 library.add(faTimes, faCheck);
@@ -28,6 +30,10 @@ library.add(faTimes, faCheck);
     FontAwesomeModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(InMemoryServerService)
+  ],
+  providers: [
+    HttpErrorHandler,
+    MessageService
   ],
   bootstrap: [AppComponent]
 })
