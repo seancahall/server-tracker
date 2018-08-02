@@ -8,12 +8,11 @@ import { ServerService } from '../server.service';
   styleUrls: ['./server-form.component.css']
 })
 export class ServerFormComponent implements OnInit {
-
-  constructor(private ServerService: ServerService) { }
+  servers: Server[];
+  constructor(private serverService: ServerService) { }
 
     submitted: boolean;
     currentDate: any;
-    servers = [];
 
   ngOnInit() {
     this.submitted = true;
@@ -49,7 +48,9 @@ export class ServerFormComponent implements OnInit {
   }
 
   getServers(): void {
-    this.servers = this.ServerService.getServers();
+    this.serverService
+        .getServers()
+        .subscribe(servers => this.servers = servers);
   }
   
   // remove server from working list

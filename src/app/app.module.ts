@@ -8,6 +8,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryServerService } from '../app/in-memory-server-service';
 
 // Add an icon to the library for convenient access in other components
 library.add(faTimes, faCheck);
@@ -22,7 +25,9 @@ library.add(faTimes, faCheck);
     BrowserModule,
     FormsModule,
     NgbModule.forRoot(),
-    FontAwesomeModule
+    FontAwesomeModule,
+    HttpClientModule,
+    HttpClientInMemoryWebApiModule.forRoot(InMemoryServerService)
   ],
   bootstrap: [AppComponent]
 })
