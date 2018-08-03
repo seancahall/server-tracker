@@ -25,12 +25,12 @@ export class ServerService {
     this.handleError = httpErrorHandler.createHandleError('ServerService');
   }
 
-  // mock api call to return data to build server table
+  /** GET: get existing records from in-memory db to build server table */
   getServers():Observable<any>{
     return this.httpc.get<any>(this.serversUrl); 
   }
 
-  /** POST: add a new server to the in-memopry database */
+  /** POST: add a new server to the in-memopry db */
   addServer (server: Server): Observable<Server> {
     return this.httpc.post<Server>(this.serversUrl, server, this.httpOptions)
       .pipe(
@@ -38,12 +38,20 @@ export class ServerService {
       );
   }
 
-  /** DELETE: delete the server from the in-memory database */
+  /** DELETE: delete the server from the in-memory db */
   deleteServer (id: number): Observable<{}> {
     const url = `${this.serversUrl}/${id}`;
     return this.httpc.delete(url, this.httpOptions)
       .pipe(
         catchError(this.handleError('deleteServer'))
+      );
+  }
+
+  /** PUT: update the server record in the in-memory db. Returns the updated server upon success. */
+  updateServer (server: Server): Observable<Server> {
+    return this.httpc.put<Server>(this.serversUrl, server, this.httpOptions)
+      .pipe(
+        catchError(this.handleError('updateServer', server))
       );
   }
 

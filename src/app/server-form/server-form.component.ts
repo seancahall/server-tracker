@@ -42,9 +42,6 @@ export class ServerFormComponent implements OnInit {
     newServer.deadline = deadline;
     newServer.setup = false;
 
-    // add to server array
-   // this.servers.push(newServer);
-
     this.serverService
       .addServer(newServer)
       .subscribe(server=> this.servers.push(server));
@@ -56,7 +53,7 @@ export class ServerFormComponent implements OnInit {
         .subscribe(servers => this.servers = servers);
   }
   
-  // remove server
+  // delete server
   removeServer(id: number): void {
     if(id){
       this.serverService
@@ -67,9 +64,17 @@ export class ServerFormComponent implements OnInit {
   }
 
   // mark server record as complete
-  setupServer(id: number): void {
-    if(id){
-      this.servers.filter(s => s.id === id)[0].setup = true;
+  setupServer(server: Server): void {
+    if(server){
+      server.setup = true;
+      this.serverService
+        .updateServer(server)
+        .subscribe(server => {
+          const serverIndex = server ? this.servers.findIndex(s => s.id === server.id) : -1;
+          if (serverIndex > -1) { 
+            this.servers[serverIndex] = server; 
+          }
+       })
     }
   }
 

@@ -13,7 +13,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
-        NgbModule,
         NgbModule.forRoot(),
         FontAwesomeModule
       ],
