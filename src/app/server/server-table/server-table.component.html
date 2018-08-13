@@ -1,0 +1,27 @@
+<table class="table table-bordered" >
+  <thead>
+    <tr>
+      <th>Hostname</th>
+      <th>IP</th>
+      <th>Deadline</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="servers">
+    <tr *ngFor="let server of servers">
+      <td><span placement="bottom" ngbPopover="{{ server.description }}" triggers="mouseenter:mouseleave">{{ server.hostname }}</span></td>
+      <td>{{ server.ip }}</td>
+      <td>{{ server.deadline | date:'shortDate' }}</td>
+      <td>{{ server.setup ? 'Completed' : 'Pending' }}</td>
+      <td>
+        <a href="#" (click)="removeServer(server.id)" placement="bottom" ngbPopover="Remove" triggers="mouseenter:mouseleave" class="inline-spacer">
+          <fa-icon icon="times" class="remove-icon"></fa-icon> 
+        </a>
+        <a *ngIf="!server.setup" href="#" (click)="setupServer(server)" placement="bottom" ngbPopover="Complete" triggers="mouseenter:mouseleave" class="complete-link">
+          <fa-icon icon="check" class="complete-icon"></fa-icon>  
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

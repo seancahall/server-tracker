@@ -21,7 +21,8 @@ describe('ServerFormComponent', () => {
         FormsModule,
         NgbModule.forRoot(),
         FontAwesomeModule
-      ]
+      ],
+      providers: []
     })
     .compileComponents();
   }));

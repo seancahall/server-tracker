@@ -1,0 +1,10 @@
+<div class="boxed">
+  <span id="overdue-header">Overdue Servers</span>
+  <div *ngFor="let server of servers | overdueServers">
+    <ul id="overdue-list">
+      <li>{{ server.hostname }}</li>
+      <li>{{ server.ip }}</li>
+      <li>{{ getDays(server.deadline) }}</li>
+    </ul>
+  </div>
+</div>
