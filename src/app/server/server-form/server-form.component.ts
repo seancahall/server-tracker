@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Server }    from '../server';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Server } from '../server';
 import { ServerService } from '../server.service';
 
 @Component({
@@ -9,49 +10,65 @@ import { ServerService } from '../server.service';
 })
 export class ServerFormComponent implements OnInit {
   @Input() servers: Server[];
+  serverForm: FormGroup;
+  submitted: boolean = false;
+  hideForm: boolean;
 
-  constructor(private serverService: ServerService) { }
-
-  submitted: boolean = true;
+  constructor(private serverService: ServerService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.newServer();
+    this.serverForm = this.formBuilder.group({
+      hostname: ['', [Validators.required, Validators.maxLength(32), Validators.pattern('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')]],
+      ip: ['', [Validators.required, Validators.pattern('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')]],
+      description: ['', Validators.required],
+      deadline: ['', Validators.required]
+    });
   }
 
-  // starter record
-  model = new Server();
-  
-  onSubmit() { 
-    this.submitted = true; 
+  // convenience getter for easy access to form fields
+  get f() { return this.serverForm.controls; }
+
+  onSubmit(form) {
+    this.submitted = true;
     let deadline;
 
-    if(this.model.deadline !== null && typeof this.model.deadline === 'object' && this.model.deadline.hasOwnProperty('year')) {
-       deadline = new Date(this.model.deadline.month + '/' + this.model.deadline.day + '/' + this.model.deadline.year).toISOString();
+    // stop here if form is invalid
+    if (this.serverForm.invalid) {
+      return;
     }
+
+    if (this.serverForm.value.deadline !== null && typeof this.serverForm.value.deadline === 'object' && this.serverForm.value.deadline.hasOwnProperty('year')) {
+      deadline = new Date(this.serverForm.value.deadline.month + '/' + this.serverForm.value.deadline.day + '/' + this.serverForm.value.deadline.year);
+    }
+
     // define a new server object
     const newServer = new Server();
-    newServer.id =  this.servers[this.servers.length-1].id + 1;
-    newServer.hostname = this.model.hostname;
-    newServer.ip = this.model.ip;
-    newServer.description = this.model.description;
+    newServer.id = this.servers[this.servers.length - 1].id + 1;
+    newServer.hostname = this.serverForm.value['hostname'];
+    newServer.ip = this.serverForm.value['ip'];
+    newServer.description = this.serverForm.value['description'];
     newServer.deadline = deadline;
     newServer.setup = false;
-    
+
     // pass to service to post
     this.serverService
       .addServer(newServer)
-      .subscribe(server=> this.servers.push(server));
+      .subscribe(server => this.servers.push(server));
   }
 
   // refresh table
   getServers(): void {
     this.serverService
-        .getServers()
-        .subscribe(servers => this.servers = servers);
+      .getServers()
+      .subscribe(servers => this.servers = servers);
   }
 
-  newServer() {
-    this.model = new Server();
+  doReset(form): void {
+    form.resetForm();
+  }
+
+  resetFlag() {
+    this.hideForm = false;
   }
 
 }

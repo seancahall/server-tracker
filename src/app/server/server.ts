@@ -3,6 +3,6 @@ export class Server {
   	public hostname: string;
   	public description: string;
   	public ip: string;
-  	public deadline: any;
+  	public deadline: Date;
   	public setup: boolean;
 }

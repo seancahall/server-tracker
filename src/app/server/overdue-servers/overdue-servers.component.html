@@ -5,6 +5,7 @@
       <li>{{ server.hostname }}</li>
       <li>{{ server.ip }}</li>
       <li>{{ getDays(server.deadline) }}</li>
+      <li>{{ server.deadline | dayDiff: currentDate }}</li>
     </ul>
   </div>
 </div>

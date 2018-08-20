@@ -3,7 +3,7 @@
     <!-- Table of Servers -->
     <div class="col-xs-12 col-md-9">
       <div class="card">
-        <div class="card-header card-title">Server Tracker <button type="button" (click)="hideForm=!hideForm;" class="btn btn-md btn-primary add-server">Add Server</button></div>
+        <div class="card-header card-title">Server Tracker<button type="button" (click)="hideForm=false;" class="btn btn-md btn-primary add-server">Add Server</button></div>
         <div class="card-body row">
           <!-- table component -->
           <div class="col-xs-12 col-md-9">
@@ -18,7 +18,7 @@
     </div>
     <!-- Add Server Form -->
     <div class="col-xs-12 col-md-3">
-      <server-form [servers]="servers" [hidden]="hideForm"></server-form>
+      <server-form [servers]="servers" [hidden]="hideForm" #myServerForm></server-form>
     </div>
   </div>
 </div>

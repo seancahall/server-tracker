@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Server } from '../server';
 
 @Pipe({
   name: 'overdueServers',
@@ -7,20 +6,12 @@ import { Server } from '../server';
 })
 export class OverdueServersPipe implements PipeTransform {
 
-  transform(allServers: Server[]): any {
-    return allServers.filter((server) => !server.setup && this.dateFilter(server.deadline));
-  }
-
-  // check if server is overdue
-  dateFilter(deadline: string): boolean {
-
-    let currentDate = new Date();
-    currentDate.setHours(0,0,0,0);
-    const strCurrrentDate = currentDate.toISOString();
-    const parsedDate = new Date(deadline);
-    const todaysDate = new Date(strCurrrentDate);
-
-    return todaysDate > parsedDate;
+  transform(servers): any {
+    if(servers instanceof Array) {
+      return servers.filter((server) => !server.setup && Date.now() > Date.parse(server.deadline)
+      );
+    }
+    return [];
   }
 
 }

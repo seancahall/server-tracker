@@ -13,7 +13,8 @@ export class ServerComponent implements OnInit {
   servers: Server[];
   hideForm: boolean = true;
 
-  @ViewChild(ServerFormComponent) serverForm;
+  @ViewChild(ServerFormComponent)
+  myServerForm: ServerFormComponent;
 
   constructor(private serverService: ServerService) { }
 
@@ -21,10 +22,13 @@ export class ServerComponent implements OnInit {
     this.getServers();
   }
 
-  /** we get the value of the property submitted from the child form component 
-   * lets us hide the form when the cancel button is clicked */
-  ngAfterViewInit() {
-    this.hideForm = this.serverForm.submitted;
+  /** we get the value of the hideForm property from the child form component 
+  which lets us hide the form when the cancel button is clicked */
+  ngAfterContentChecked() {
+    if(!this.hideForm && this.myServerForm.hideForm) {
+      this.hideForm = true;
+      this.myServerForm.resetFlag();
+    }
   }
 
   getServers(): void {

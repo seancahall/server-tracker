@@ -1,39 +1,39 @@
 <div class="card">
   <div class="card-header card-title">Add Server</div>
   <div class="card-body">
-    <form (ngSubmit)="onSubmit()" #serverForm="ngForm">
+    <form (ngSubmit)="onSubmit(f)" [formGroup]="serverForm" #f="ngForm">
       <div class="form-group">
         <label for="Hostname">Hostname</label>
-        <input type="text" class="form-control" id="hostname" [(ngModel)]="model.hostname" name="hostname" required #hostname="ngModel" pattern="^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$" maxlength="32">
-        <div [hidden]="hostname.valid || hostname.pristine" class="alert alert-danger">
-        A valid hostname is required
-        </div>
-      </div> 
-      <div class="form-group">
-        <label for="ip">IP</label>
-        <input type="text" class="form-control" id="ip" [(ngModel)]="model.ip" name="ip" required #ip="ngModel" pattern="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$">
-        <div [hidden]="ip.valid || ip.pristine" class="alert alert-danger">
-        A valid IP is required
+        <input type="text" class="form-control" formControlName="hostname" [ngClass]="{ 'is-invalid': submitted && f.hostname && f.hostname?.errors }">
+        <div *ngIf="submitted && f.hostname?.errors" class="invalid-feedback">
+          <div *ngIf="f.hostname?.errors.required">A valid hostname is required</div>
         </div>
       </div>
       <div class="form-group">
-        <label for="deadline">Deadline</label>
-        <input type="text" class="form-control" id="deadline" [ngModel]="model.deadline" 
-        (ngModelChange)="model.deadline=$event" name="deadline" ngbDatepicker #d="ngbDatepicker" #deadline="ngModel" (focus)="d.toggle()">
-        <div [hidden]="deadline.valid || deadline.pristine" class="alert alert-danger"> 
-        A deadline is required
+        <label>IP</label>
+        <input type="text" formControlName="ip" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ip?.errors }" />
+        <div *ngIf="submitted && f.ip?.errors" class="invalid-feedback">
+          <div *ngIf="f.ip?.errors?.required">A valid IP is required</div>
         </div>
       </div>
       <div class="form-group">
-        <label for="description">Description</label>
-        <textarea rows="3" cols="30" class="form-control" id="description" [(ngModel)]="model.description" name="description" required #description="ngModel">
+        <label>Deadlines</label>
+        <input type="text" formControlName="deadline" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.deadline?.errors }"
+          #d="ngbDatepicker" ngbDatepicker (focus)="d.toggle()" />
+        <div *ngIf="submitted && f.deadline?.errors" class="invalid-feedback">
+          <div *ngIf="f.deadline?.errors.required">Deadline is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea rows="3" cols="30" class="form-control" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description?.errors }">
         </textarea>
-        <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
-        A description is required
+        <div *ngIf="submitted && f.description?.errors" class="invalid-feedback">
+          <div *ngIf="f.description?.errors.required">Description is required</div>
         </div>
-      </div>      
-      <button type="submit" class="btn btn-success" [disabled]="!serverForm.form.valid">Submit</button> 
-      <button type="button" (click)="serverForm.reset(); submitted=!submitted;" class="btn btn-primary btn-sm" id="cancel-form">Cancel</button>
+      </div>
+      <button type="submit" class="btn btn-success" [disabled]="!serverForm.valid">Submit</button>
+      <button type="button" (click)="doReset(f); hideForm=true;" class="btn btn-primary btn-sm" id="cancel-form">Cancel</button>
     </form>
   </div>
-</div><pre>{{ servers | json }}</pre>
+</div>
