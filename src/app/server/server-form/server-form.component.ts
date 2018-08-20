@@ -18,10 +18,20 @@ export class ServerFormComponent implements OnInit {
 
   ngOnInit() {
     this.serverForm = this.formBuilder.group({
-      hostname: ['', [Validators.required, Validators.maxLength(32), Validators.pattern('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')]],
-      ip: ['', [Validators.required, Validators.pattern('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')]],
-      description: ['', Validators.required],
-      deadline: ['', Validators.required]
+      hostname: ['', [
+        Validators.required, 
+        Validators.maxLength(32), 
+        Validators.pattern('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')]
+      ],
+      ip: ['', [
+        Validators.required, Validators.pattern('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')]
+      ],
+      description: ['', 
+        Validators.required
+      ],
+      deadline: ['', 
+        Validators.required
+      ]
     });
   }
 
@@ -37,17 +47,13 @@ export class ServerFormComponent implements OnInit {
       return;
     }
 
-    if (this.serverForm.value.deadline !== null && typeof this.serverForm.value.deadline === 'object' && this.serverForm.value.deadline.hasOwnProperty('year')) {
-      deadline = new Date(this.serverForm.value.deadline.month + '/' + this.serverForm.value.deadline.day + '/' + this.serverForm.value.deadline.year);
-    }
-
     // define a new server object
     const newServer = new Server();
     newServer.id = this.servers[this.servers.length - 1].id + 1;
     newServer.hostname = this.serverForm.value['hostname'];
     newServer.ip = this.serverForm.value['ip'];
     newServer.description = this.serverForm.value['description'];
-    newServer.deadline = deadline;
+    newServer.deadline = new Date (`${this.serverForm.value.deadline.month}/${this.serverForm.value.deadline.day}/${this.serverForm.value.deadline.year}`);
     newServer.setup = false;
 
     // pass to service to post
