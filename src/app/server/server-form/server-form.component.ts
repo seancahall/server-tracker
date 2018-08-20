@@ -11,12 +11,12 @@ import { ServerService } from '../server.service';
 export class ServerFormComponent implements OnInit {
   @Input() servers: Server[];
   serverForm: FormGroup;
-  submitted: boolean = false;
   hideForm: boolean;
 
   constructor(private serverService: ServerService, private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    // define form builder group and validation rules
     this.serverForm = this.formBuilder.group({
       hostname: ['', [
         Validators.required, 
@@ -24,7 +24,8 @@ export class ServerFormComponent implements OnInit {
         Validators.pattern('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$')]
       ],
       ip: ['', [
-        Validators.required, Validators.pattern('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')]
+        Validators.required, 
+        Validators.pattern('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$')]
       ],
       description: ['', 
         Validators.required
@@ -38,9 +39,8 @@ export class ServerFormComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.serverForm.controls; }
 
+  // add a new server
   onSubmit(form) {
-    this.submitted = true;
-    let deadline;
 
     // stop here if form is invalid
     if (this.serverForm.invalid) {
@@ -60,6 +60,8 @@ export class ServerFormComponent implements OnInit {
     this.serverService
       .addServer(newServer)
       .subscribe(server => this.servers.push(server));
+    
+    this.doReset(form);
   }
 
   // refresh table
