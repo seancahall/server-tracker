@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Server } from '../server';
 import { ServerService } from '../server.service';
@@ -10,8 +10,8 @@ import { ServerService } from '../server.service';
 })
 export class ServerFormComponent implements OnInit {
   @Input() servers: Server[];
+  @Output() hideServerForm = new EventEmitter();
   serverForm: FormGroup;
-  hideForm: boolean;
 
   constructor(private serverService: ServerService, private formBuilder: FormBuilder) { }
 
@@ -64,19 +64,9 @@ export class ServerFormComponent implements OnInit {
     this.doReset(form);
   }
 
-  // refresh table
-  getServers(): void {
-    this.serverService
-      .getServers()
-      .subscribe(servers => this.servers = servers);
-  }
-
   doReset(form): void {
     form.resetForm();
-  }
-
-  resetFlag() {
-    this.hideForm = false;
+    this.hideServerForm.emit(true);
   }
 
 }

@@ -18,7 +18,7 @@
     </div>
     <!-- Add Server Form -->
     <div class="col-xs-12 col-md-3">
-      <server-form [servers]="servers" [hidden]="hideForm" #myServerForm></server-form>
+      <server-form [servers]="servers" (hideServerForm)="hideForm=$event" [hidden]="hideForm"></server-form>
     </div>
   </div>
 </div>
