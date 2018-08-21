@@ -67,6 +67,11 @@ describe('ServerFormComponent', () => {
     expect(component.serverForm.get('hostname').valid).toEqual(true);
   });
 
+  it('should reject an incorrect value', () => {
+    component.serverForm.get('hostname').setValue('!@#$%^&*');
+    expect(component.serverForm.get('hostname').valid).toEqual(false);
+  });
 
+  
 
 });
